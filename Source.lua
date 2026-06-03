@@ -386,7 +386,7 @@ function IceHub.CreateMain(gameName, subtitle)
 
     keyFrameCorner.CornerRadius = UDim.new(0, 4)
     keyFrameCorner.Parent = KeyFrame
-    
+
     keyFrameStroke.Color = Color3.fromRGB(39, 39, 39)
     keyFrameStroke.Thickness = 0.8
     keyFrameStroke.Parent = KeyFrame
@@ -410,7 +410,7 @@ function IceHub.CreateMain(gameName, subtitle)
 
     keyInputCorner.CornerRadius = UDim.new(0, 4)
     keyInputCorner.Parent = KeyInput
-    
+
     keyInputStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     keyInputStroke.Color = Color3.fromRGB(49, 49, 49)
     keyInputStroke.Transparency = 0.2
@@ -434,7 +434,7 @@ function IceHub.CreateMain(gameName, subtitle)
 
     getKeyBtnCorner.CornerRadius = UDim.new(0, 4)
     getKeyBtnCorner.Parent = GetKeyBtn
-    
+
     getKeyBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     getKeyBtnStroke.Color = Color3.fromRGB(49, 49, 49)
     getKeyBtnStroke.Transparency = 0.2
@@ -458,7 +458,7 @@ function IceHub.CreateMain(gameName, subtitle)
 
     checkBtnCorner.CornerRadius = UDim.new(0, 4)
     checkBtnCorner.Parent = CheckBtn
-    
+
     checkBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     checkBtnStroke.Color = Color3.fromRGB(49, 49, 49)
     checkBtnStroke.Transparency = 0.2
@@ -468,12 +468,51 @@ function IceHub.CreateMain(gameName, subtitle)
         setclipboard("https://link-to-key.com")
     end)
 
+    local isChecking = false
+
     CheckBtn.MouseButton1Click:Connect(function()
+        if isChecking then return end
+        
         local input = KeyInput.Text
-        if input == "Key" then
-            print("Correct key.")
+        
+        if input == "YOUR_SECRET_KEY" then
+            isChecking = true
+            CheckBtn.Text = "Correct Key!"
+            CheckBtn.TextColor3 = Color3.fromRGB(50, 255, 50)
+            task.wait(2)
+            task.spawn(function()
+                for _, child in pairs(MainFrame:GetChildren()) do
+                    if child.Name ~= "FrameFolder" and child.Name ~= "UICorner" then
+                        child.Visible = false
+                    end
+                end
+                for _, page in pairs(FrameFolder:GetChildren()) do
+                    if page.Visible then
+                        lastVisiblePage = page
+                    end
+                    page.Visible = false
+                end
+                tweenService:Create(MainFrameShadow, TweenInfo.new(0.45), {
+                    Size = UDim2.new(0, 0, 0, 0)
+                }):Play()
+                tweenService:Create(MainFrame, TweenInfo.new(0.45), {
+                    Size = UDim2.new(0, 0, 0, 0)
+                }):Play()
+                wait(0.45)
+                screenGui:Destroy()
+            end)
         else
-            print("Incorrct key.")
+            isChecking = true
+            local originalText = "Check Key"
+            local originalColor = buttonColor or Color3.fromRGB(255, 255, 255)
+            
+            CheckBtn.Text = "Incorrect Key"
+            CheckBtn.TextColor3 = Color3.fromRGB(255, 50, 50)
+            task.wait(4)
+            
+            CheckBtn.Text = originalText
+            CheckBtn.TextColor3 = originalColor
+            isChecking = false
         end
     end)
 

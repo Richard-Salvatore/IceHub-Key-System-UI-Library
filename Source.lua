@@ -464,8 +464,16 @@ function IceHub.CreateMain(gameName, subtitle)
     checkBtnStroke.Transparency = 0.2
     checkBtnStroke.Parent = CheckBtn
 
+    local isCopying = false
     GetKeyBtn.MouseButton1Click:Connect(function()
+        if isCopying then return end
+        isCopying = true
         setclipboard("https://link-to-key.com")
+        local originalText = "Get Key"
+        GetKeyBtn.Text = "Link Copied!"
+        task.wait(1.5)
+        GetKeyBtn.Text = originalText
+        isCopying = false
     end)
 
     local isChecking = false
@@ -479,7 +487,7 @@ function IceHub.CreateMain(gameName, subtitle)
             isChecking = true
             CheckBtn.Text = "Correct Key!"
             CheckBtn.TextColor3 = Color3.fromRGB(50, 255, 50)
-            task.wait(2)
+            task.wait(1.5)
             task.spawn(function()
                 for _, child in pairs(MainFrame:GetChildren()) do
                     if child.Name ~= "FrameFolder" and child.Name ~= "UICorner" then
@@ -508,7 +516,7 @@ function IceHub.CreateMain(gameName, subtitle)
             
             CheckBtn.Text = "Incorrect Key"
             CheckBtn.TextColor3 = Color3.fromRGB(255, 50, 50)
-            task.wait(4)
+            task.wait(1.5)
             
             CheckBtn.Text = originalText
             CheckBtn.TextColor3 = originalColor
@@ -1187,7 +1195,8 @@ function IceHub.CreateMain(gameName, subtitle)
     Settings.ImageColor3 = Color3.fromRGB(102, 102, 102)
     Settings.ImageRectOffset = Vector2.new(324, 124)
     Settings.ImageRectSize = Vector2.new(36, 36)
-    Settings.ImageTransparency = 0.2
+    Settings.ImageTransparency = 1
+    Settings.Visible = false
     Settings.MouseButton1Click:Connect(function()
         for _, tabBtn in pairs(tabButtonList) do
             if tabBtn.BackgroundTransparency ~= 1 then
